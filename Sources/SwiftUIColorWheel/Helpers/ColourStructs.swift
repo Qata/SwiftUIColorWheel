@@ -25,25 +25,50 @@ public struct RGB {
         let v = max
         let delta = max - min
 
-        guard delta > 0.00001 else { return HSV(h: 0, s: 0, v: max) }
+        guard delta > 0.00001
+        else { return HSV(h: 0, s: 0, v: max) }
         guard max > 0
-        else { return HSV(h: -1, s: 0, v: v) } // Undefined, achromatic grey
+        else { return HSV(h: -1, s: 0, v: v) } // Undefined, achromatic grey.
+
         let s = delta / max
-
         let hue: (CGFloat, CGFloat) -> CGFloat = { max, delta -> CGFloat in
-            if r == max { return (g - b) / delta } // between yellow & magenta
-            else if g ==
-                max { return 2 + (b - r) / delta } // between cyan & yellow
-            else { return 4 + (r - g) / delta } // between magenta & cyan
+            switch (r, g) {
+            case (max, _):
+                // Between yellow & magenta.
+                return (g - b) / delta
+            case (_, max):
+                // Between cyan & yellow.
+                return 2 + (b - r) / delta
+            case (_, _):
+                // Between magenta & cyan.
+                return 4 + (r - g) / delta
+            }
         }
-
-        let h = hue(max, delta) * 60 // In degrees
+        let h = hue(max, delta) * 60 // In degrees.
 
         return HSV(h: h < 0 ? h + 360 : h, s: s, v: v)
     }
 
     var hsv: HSV {
         RGB.toHSV(r: r, g: g, b: b)
+    }
+}
+
+public extension RGB {
+    var red: CGFloat { r }
+    var green: CGFloat { g }
+    var blue: CGFloat { b }
+
+    init(red: CGFloat, green: CGFloat, blue: CGFloat) {
+        self.init(r: red, g: green, b: blue)
+    }
+
+    func color(brightness: CGFloat) -> Color {
+        .init(red: r, green: g, blue: b, opacity: brightness)
+    }
+    
+    func uiColor(brightness: CGFloat) -> Color {
+        .init(red: r, green: g, blue: b, opacity: brightness)
     }
 }
 

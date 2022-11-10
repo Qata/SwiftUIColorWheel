@@ -169,7 +169,7 @@ public struct ColorSlider: View {
 struct CustomSlider_Previews: PreviewProvider {
     static var previews: some View {
         ColorSlider(
-            rgbColour: .constant(RGB(r: 0.5, g: 0.1, b: 0.9)),
+            rgb: .constant(RGB(r: 0.5, g: 0.1, b: 0.9)),
             value: .constant(10),
             range: 1 ... 100
         )
