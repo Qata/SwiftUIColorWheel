@@ -34,14 +34,14 @@ public struct ColorSlider: View {
     public init(
         rgb: Binding<RGB>,
         value: Binding<CGFloat>,
-        range: ClosedRange<CGFloat>,
+        range: ClosedRange<CGFloat> = 0...1,
         leadingOffset: CGFloat = 8,
         trailingOffset: CGFloat = 8,
         knobSize: CGSize = .init(width: 28, height: 28)
     ) {
         _rgbColour = rgb
         _value = value
-        self.range = range
+        self.range = range.clamped(to: 0.001...1)
         self.leadingOffset = leadingOffset
         self.trailingOffset = trailingOffset
         self.knobSize = knobSize
