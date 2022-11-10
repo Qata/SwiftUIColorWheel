@@ -63,12 +63,12 @@ public extension RGB {
         self.init(r: red, g: green, b: blue)
     }
 
-    func color(brightness: CGFloat) -> Color {
-        .init(red: r, green: g, blue: b, opacity: brightness)
+    var color: Color {
+        .init(red: r, green: g, blue: b, opacity: 1)
     }
     
-    func uiColor(brightness: CGFloat) -> Color {
-        .init(red: r, green: g, blue: b, opacity: brightness)
+    var uiColor: Color {
+        .init(red: r, green: g, blue: b, opacity: 1)
     }
 }
 
