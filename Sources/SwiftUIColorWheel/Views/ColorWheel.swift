@@ -29,11 +29,13 @@ public struct ColorWheel: View {
         _rgbColor = rgb
         _brightness = brightness
 
-        rgbColor = HSV(
-            h: rgbColor.hsv.h,
-            s: rgbColor.hsv.s,
-            v: self.brightness
-        ).rgb
+        DispatchQueue.main.async {
+            rgbColor = HSV(
+                h: rgbColor.hsv.h,
+                s: rgbColor.hsv.s,
+                v: self.brightness
+            ).rgb
+        }
     }
 
     public var body: some View {
