@@ -68,8 +68,16 @@ public struct ColorSlider: View {
                     /// The outer shadow.
                     .shadow(color: Color("ShadowOuter"), radius: 18)
                 HStack {
-                    /// The knob.
                     ZStack {
+                        /// The knob.
+                        RoundedRectangle(cornerRadius: 50)
+                            .fill(
+                                Color(
+                                    red: rgbColour.r - 0.1,
+                                    green: rgbColour.g - 0.1,
+                                    blue: rgbColour.b - 0.1
+                                )
+                            )
                         /// The knob outline.
                         RoundedRectangle(cornerRadius: 50)
                             .strokeBorder(
@@ -78,13 +86,13 @@ public struct ColorSlider: View {
                                     green: 1 - rgbColour.g,
                                     blue: 1 - rgbColour.b
                                 ),
-                                lineWidth: 4
-                            )
-                            .frame(
-                                width: knobSize.width,
-                                height: knobSize.height
+                                lineWidth: 2
                             )
                     }
+                    .frame(
+                        width: knobSize.width,
+                        height: knobSize.height
+                    )
                     /// Set the offset of the knob.
                     .offset(
                         x: self.$value.wrappedValue.map(
