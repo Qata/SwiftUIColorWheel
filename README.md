@@ -1,4 +1,4 @@
-# SwiftUI Colour Wheel
+# SwiftUI Color Wheel
 
 A colour wheel made all in SwiftUI. 
 
