@@ -8,9 +8,11 @@
 
 import SwiftUI
 
-/// This was all taken from here and only slightly edited. -> https://gist.github.com/FredrikSjoberg/cdea97af68c6bdb0a89e3aba57a966ce
+/// This was all taken from here and only slightly edited. ->
+/// https://gist.github.com/FredrikSjoberg/cdea97af68c6bdb0a89e3aba57a966ce
 
-/// Struct that holds red, green and blue values. Also has a `hsv` value that converts it's values to hsv.
+/// Struct that holds red, green and blue values. Also has a `hsv` value that
+/// converts it's values to hsv.
 public struct RGB {
     var r: CGFloat // Percent [0,1]
     var g: CGFloat // Percent [0,1]
@@ -24,12 +26,14 @@ public struct RGB {
         let delta = max - min
 
         guard delta > 0.00001 else { return HSV(h: 0, s: 0, v: max) }
-        guard max > 0 else { return HSV(h: -1, s: 0, v: v) } // Undefined, achromatic grey
+        guard max > 0
+        else { return HSV(h: -1, s: 0, v: v) } // Undefined, achromatic grey
         let s = delta / max
 
         let hue: (CGFloat, CGFloat) -> CGFloat = { max, delta -> CGFloat in
             if r == max { return (g - b) / delta } // between yellow & magenta
-            else if g == max { return 2 + (b - r) / delta } // between cyan & yellow
+            else if g ==
+                max { return 2 + (b - r) / delta } // between cyan & yellow
             else { return 4 + (r - g) / delta } // between magenta & cyan
         }
 
@@ -43,7 +47,8 @@ public struct RGB {
     }
 }
 
-/// Struct that holds hue, saturation, value values. Also has a `rgb` value that converts it's values to hsv.
+/// Struct that holds hue, saturation, value values. Also has a `rgb` value that
+/// converts it's values to hsv.
 struct HSV {
     var h: CGFloat // Angle in degrees [0,360] or -1 as Undefined
     var s: CGFloat // Percent [0,1]
@@ -78,6 +83,6 @@ struct HSV {
     }
 
     var rgb: RGB {
-        return HSV.toRGB(h: h, s: s, v: v)
+        HSV.toRGB(h: h, s: s, v: v)
     }
 }

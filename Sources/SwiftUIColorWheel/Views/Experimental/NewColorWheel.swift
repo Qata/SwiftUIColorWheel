@@ -13,11 +13,13 @@ struct NewColorWheel: View {
     /// Draws at a specified radius.
     var radius: CGFloat
 
-    /// The RGB colour. Is a binding as it can change and the view will update when it does.
+    /// The RGB colour. Is a binding as it can change and the view will update
+    /// when it does.
     @Binding var rgbColor: RGB
 
     var body: some View {
-        /// Geometry reader so we can know more about the geometry around and within the view.
+        /// Geometry reader so we can know more about the geometry around and
+        /// within the view.
         GeometryReader { geometry in
             ZStack {
                 /// The colour wheel. See the definition.
@@ -27,7 +29,10 @@ struct NewColorWheel: View {
                     /// The outline.
                     .overlay(
                         Circle()
-                            .size(CGSize(width: self.radius, height: self.radius))
+                            .size(CGSize(
+                                width: self.radius,
+                                height: self.radius
+                            ))
                             .stroke(Color("Outline"), lineWidth: 10)
                             /// Inner shadow.
                             .shadow(color: Color("ShadowInner"), radius: 8)
@@ -35,14 +40,25 @@ struct NewColorWheel: View {
                     /// Clip inner shadow.
                     .clipShape(
                         Circle()
-                            .size(CGSize(width: self.radius, height: self.radius))
+                            .size(CGSize(
+                                width: self.radius,
+                                height: self.radius
+                            ))
                     )
                     /// Outer shadow.
                     .shadow(color: Color("ShadowOuter"), radius: 15)
 
-                /// This *is* required for the saturation scale of the wheel. It actually makes the gradient less "accurate" but looks nicer. It's basically just a white radial gradient that blends the colours together nicer.
-                RadialGradient(gradient: Gradient(colors: [.white, .black]), center: .center, startRadius: 0, endRadius: self.radius / 2 - 10)
-                    .blendMode(.screen)
+                /// This *is* required for the saturation scale of the wheel. It
+                /// actually makes the gradient less "accurate" but looks nicer.
+                /// It's basically just a white radial gradient that blends the
+                /// colours together nicer.
+                RadialGradient(
+                    gradient: Gradient(colors: [.white, .black]),
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: self.radius / 2 - 10
+                )
+                .blendMode(.screen)
 
                 /// The little knob that shows selected colour.
                 Circle()
@@ -55,19 +71,33 @@ struct NewColorWheel: View {
                 DragGesture(minimumDistance: 0, coordinateSpace: .global)
                     .onChanged { value in
                         /// Work out angle which will be the hue.
-                        let y = geometry.frame(in: .global).midY - value.location.y
-                        let x = value.location.x - geometry.frame(in: .global).midX
+                        let y = geometry.frame(in: .global).midY - value
+                            .location.y
+                        let x = value.location.x - geometry.frame(in: .global)
+                            .midX
 
-                        /// Use `atan2` to get the angle from the center point then convert than into a 360 value with custom function(find it in helpers).
+                        /// Use `atan2` to get the angle from the center point
+                        /// then convert than into a 360 value with custom
+                        /// function(find it in helpers).
                         let hue = atan2To360(atan2(y, x))
 
-                        /// Work out distance from the center point which will be the saturation.
-                        let center = CGPoint(x: geometry.frame(in: .global).midX, y: geometry.frame(in: .global).midY)
+                        /// Work out distance from the center point which will
+                        /// be the saturation.
+                        let center = CGPoint(
+                            x: geometry.frame(in: .global).midX,
+                            y: geometry.frame(in: .global).midY
+                        )
 
-                        /// Maximum value of sat is 1 so we find the smallest of 1 and the distance.
-                        let saturation = min(distance(center, value.location) / (self.radius / 2), 1)
+                        /// Maximum value of sat is 1 so we find the smallest of
+                        /// 1 and the distance.
+                        let saturation = min(
+                            distance(center, value.location) /
+                                (self.radius / 2),
+                            1
+                        )
 
-                        /// Convert HSV to RGB and set the colour which will notify the views.
+                        /// Convert HSV to RGB and set the colour which will
+                        /// notify the views.
                         self.rgbColor = HSV(h: hue, s: saturation, v: 1).rgb
                     }
             )

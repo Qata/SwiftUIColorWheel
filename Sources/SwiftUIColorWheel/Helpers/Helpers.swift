@@ -27,7 +27,9 @@ extension CGFloat {
         from: ClosedRange<CGFloat>,
         to: ClosedRange<CGFloat>
     ) -> CGFloat {
-        let result = ((self - from.lowerBound) / (from.upperBound - from.lowerBound)) * (to.upperBound - to.lowerBound) + to.lowerBound
+        let result =
+            ((self - from.lowerBound) / (from.upperBound - from.lowerBound)) *
+            (to.upperBound - to.lowerBound) + to.lowerBound
         return result
     }
 }

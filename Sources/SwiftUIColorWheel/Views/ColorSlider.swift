@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ColorSlider: View {
+public struct ColorSlider: View {
     /// The slider will also show the selected colour.
     @Binding var rgbColour: RGB
 
@@ -25,19 +25,40 @@ struct ColorSlider: View {
     @State var isTouchingKnob = false
 
     /// Set the leading and trailing offset of the track for the knob.
-    var leadingOffset: CGFloat = 8
-    var trailingOffset: CGFloat = 8
+    var leadingOffset: CGFloat
+    var trailingOffset: CGFloat
 
     /// Set the knob size.
-    var knobSize: CGSize = .init(width: 28, height: 28)
+    var knobSize: CGSize
+    
+    
+    public init(
+        rgb: Binding<RGB>,
+        value: Binding<CGFloat>,
+        range: ClosedRange<CGFloat>,
+        leadingOffset: CGFloat = 8,
+        trailingOffset: CGFloat = 8,
+        knobSize: CGSize = .init(width: 28, height: 28)
+    ) {
+        self._rgbColour = rgb
+        self._value = value
+        self.range = range
+        self.leadingOffset = leadingOffset
+        self.trailingOffset = trailingOffset
+        self.knobSize = knobSize
+    }
 
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             ZStack {
                 /// The slider track.
                 RoundedRectangle(cornerRadius: 30)
                     /// Set the colour to be the selected colour.
-                    .foregroundColor(Color(red: Double(self.rgbColour.r), green: Double(self.rgbColour.g), blue: Double(self.rgbColour.b)))
+                    .foregroundColor(Color(
+                        red: Double(self.rgbColour.r),
+                        green: Double(self.rgbColour.g),
+                        blue: Double(self.rgbColour.b)
+                    ))
                     /// The outline.
                     .overlay(
                         RoundedRectangle(cornerRadius: 30)
@@ -50,15 +71,36 @@ struct ColorSlider: View {
                     ZStack {
                         /// The knob outline.
                         RoundedRectangle(cornerRadius: 50)
-                            .stroke(Color("Outline"), lineWidth: self.isTouchingKnob ? 4 : 5)
-                            .frame(width: self.knobSize.width, height: self.knobSize.height)
+                            .stroke(
+                                Color("Outline"),
+                                lineWidth: self.isTouchingKnob ? 4 : 5
+                            )
+                            .frame(
+                                width: self.knobSize.width,
+                                height: self.knobSize.height
+                            )
                         /// The knob center.
                         RoundedRectangle(cornerRadius: 50)
-                            .foregroundColor(Color(red: Double(self.rgbColour.r - 0.1), green: Double(self.rgbColour.g - 0.1), blue: Double(self.rgbColour.b - 0.1)))
-                            .frame(width: self.knobSize.width, height: self.knobSize.height)
+                            .foregroundColor(Color(
+                                red: Double(self.rgbColour.r - 0.1),
+                                green: Double(self.rgbColour.g - 0.1),
+                                blue: Double(self.rgbColour.b - 0.1)
+                            ))
+                            .frame(
+                                width: self.knobSize.width,
+                                height: self.knobSize.height
+                            )
                     }
                     /// Set the offset of the knob.
-                    .offset(x: self.$value.wrappedValue.map(from: self.range, to: self.leadingOffset ... (geometry.size.width - self.knobSize.width - self.trailingOffset)))
+                    .offset(x: self.$value.wrappedValue.map(
+                        from: self.range,
+                        to: self
+                            .leadingOffset ...
+                            (
+                                geometry.size.width - self.knobSize.width - self
+                                    .trailingOffset
+                            )
+                    ))
                     /// The knob shadow.
                     .shadow(color: Color("ShadowOuter"), radius: 18)
                     /// Gesture to detect drag.
@@ -66,25 +108,56 @@ struct ColorSlider: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
 
-                                /// Tell view we are now touching the knob and record the position before we move it.
+                                /// Tell view we are now touching the knob and
+                                /// record the position before we move it.
                                 self.isTouchingKnob = true
                                 if abs(value.translation.width) < 0.1 {
-                                    self.lastOffset = self.$value.wrappedValue.map(from: self.range, to: self.leadingOffset ... (geometry.size.width - self.knobSize.width - self.trailingOffset))
+                                    self.lastOffset = self.$value.wrappedValue
+                                        .map(
+                                            from: self.range,
+                                            to: self
+                                                .leadingOffset ...
+                                                (
+                                                    geometry.size.width - self
+                                                        .knobSize
+                                                        .width - self
+                                                        .trailingOffset
+                                                )
+                                        )
                                 }
 
-                                /// Calculate what the new x offset as well as the value should be.
-                                let sliderPos = max(0 + self.leadingOffset, min(self.lastOffset + value.translation.width, geometry.size.width - self.knobSize.width - self.trailingOffset))
-                                let sliderVal = sliderPos.map(from: self.leadingOffset ... (geometry.size.width - self.knobSize.width - self.trailingOffset), to: self.range)
+                                /// Calculate what the new x offset as well as
+                                /// the value should be.
+                                let sliderPos = max(
+                                    0 + self.leadingOffset,
+                                    min(
+                                        self.lastOffset + value.translation
+                                            .width,
+                                        geometry.size.width - self.knobSize
+                                            .width - self.trailingOffset
+                                    )
+                                )
+                                let sliderVal = sliderPos.map(
+                                    from: self
+                                        .leadingOffset ...
+                                        (
+                                            geometry.size.width - self.knobSize
+                                                .width - self.trailingOffset
+                                        ),
+                                    to: self.range
+                                )
 
                                 self.value = sliderVal
                             }
                             .onEnded { _ in
 
-                                /// Gesture is ended and we are no longer touching the knob.
+                                /// Gesture is ended and we are no longer
+                                /// touching the knob.
                                 self.isTouchingKnob = false
                             }
                     )
-                    /// Spacer in HStack aligns the knob to the left so that we don't have to deal with abs().
+                    /// Spacer in HStack aligns the knob to the left so that we
+                    /// don't have to deal with abs().
                     Spacer()
                 }
             }
@@ -95,6 +168,10 @@ struct ColorSlider: View {
 
 struct CustomSlider_Previews: PreviewProvider {
     static var previews: some View {
-        ColorSlider(rgbColour: .constant(RGB(r: 0.5, g: 0.1, b: 0.9)), value: .constant(10), range: 1 ... 100)
+        ColorSlider(
+            rgbColour: .constant(RGB(r: 0.5, g: 0.1, b: 0.9)),
+            value: .constant(10),
+            range: 1 ... 100
+        )
     }
 }

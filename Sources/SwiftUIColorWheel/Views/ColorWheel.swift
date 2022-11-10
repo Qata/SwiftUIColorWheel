@@ -13,7 +13,8 @@ public struct ColorWheel: View {
     /// Draws at a specified radius.
     var radius: CGFloat
 
-    /// The RGB colour. Is a binding as it can change and the view will update when it does.
+    /// The RGB colour. Is a binding as it can change and the view will update
+    /// when it does.
     @Binding var rgbColor: RGB
 
     /// The brightness/value of the colour wheel
@@ -40,8 +41,8 @@ public struct ColorWheel: View {
             ZStack {
                 /// The colour wheel. See the definition.
                 CIHueSaturationValueGradientView(
-                    radius: self.radius,
-                    brightness: self.$brightness
+                    radius: radius,
+                    brightness: $brightness
                 )
                 /// Smoothing out of the colours.
                 .blur(radius: 10)
@@ -60,9 +61,25 @@ public struct ColorWheel: View {
                 )
                 /// Outer shadow.
                 .shadow(color: Color("ShadowOuter"), radius: 15)
-                /// This is not required and actually makes the gradient less "accurate" but looks nicer. It's basically just a white radial gradient that blends the colours together nicer. We also slowly dissolve it as the brightness/value goes down.
-                RadialGradient(gradient: Gradient(colors: [Color.white.opacity(0.8 * Double(brightness)), .clear]), center: .center, startRadius: 0, endRadius: radius / 2 - 10)
-                    .blendMode(.screen)
+                /// This is not required and actually makes the gradient less
+                /// "accurate" but looks nicer. It's basically just a white
+                /// radial gradient that blends the colours together nicer. We
+                /// also slowly dissolve it as the brightness/value goes down.
+                RadialGradient(
+                    gradient: Gradient(
+                        colors: [
+                            Color.white
+                                .opacity(
+                                    0.8 * Double(brightness)
+                                ),
+                            .clear
+                        ]
+                    ),
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: radius / 2 - 10
+                )
+                .blendMode(.screen)
 
                 /// The little knob that shows selected colour.
                 Circle()
@@ -74,27 +91,38 @@ public struct ColorWheel: View {
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .global)
                     .onChanged { value in
-
                         /// Work out angle which will be the hue.
                         let y = geometry.frame(in: .global).midY - value.location.y
                         let x = value.location.x - geometry.frame(in: .global).midX
 
-                        /// Use `atan2` to get the angle from the center point then convert than into a 360 value with custom function(find it in helpers).
+                        /// Use `atan2` to get the angle from the center point
+                        /// then convert than into a 360 value with custom
+                        /// function(find it in helpers).
                         let hue = atan2To360(atan2(y, x))
 
-                        /// Work out distance from the center point which will be the saturation.
-                        let center = CGPoint(x: geometry.frame(in: .global).midX, y: geometry.frame(in: .global).midY)
+                        /// Work out distance from the center point which will
+                        /// be the saturation.
+                        let center = CGPoint(
+                            x: geometry.frame(in: .global).midX,
+                            y: geometry.frame(in: .global).midY
+                        )
 
-                        /// Maximum value of sat is 1 so we find the smallest of 1 and the distance.
-                        let saturation = min(distance(center, value.location) / (self.radius / 2), 1)
+                        /// Maximum value of sat is 1 so we find the smallest of
+                        /// 1 and the distance.
+                        let saturation = min(
+                            distance(center, value.location) / (radius / 2),
+                            1
+                        )
 
-                        /// Convert HSV to RGB and set the colour which will notify the views.
-                        self.rgbColor = HSV(h: hue, s: saturation, v: self.brightness).rgb
+                        rgbColor = HSV(
+                            h: hue,
+                            s: saturation,
+                            v: brightness
+                        ).rgb
                     }
             )
         }
-        /// Set the size.
-        .frame(width: self.radius, height: self.radius)
+        .frame(width: radius, height: radius)
     }
 }
 

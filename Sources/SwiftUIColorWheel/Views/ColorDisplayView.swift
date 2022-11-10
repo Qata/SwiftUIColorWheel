@@ -8,10 +8,14 @@
 
 import SwiftUI
 
-struct ColorDisplayView: View {
+public struct ColorDisplayView: View {
     @Binding var rgbColor: RGB
+    
+    init(rgb: Binding<RGB>) {
+        self._rgbColor = rgb
+    }
 
-    var body: some View {
+    public var body: some View {
         /// The view that shows the selected colour.
         RoundedRectangle(cornerRadius: 10)
             .foregroundColor(
@@ -33,6 +37,6 @@ struct ColorDisplayView: View {
 
 struct ColourShowView_Previews: PreviewProvider {
     static var previews: some View {
-        ColorDisplayView(rgbColor: .constant(RGB(r: 1, g: 1, b: 1)))
+        ColorDisplayView(rgb: .constant(RGB(r: 1, g: 1, b: 1)))
     }
 }
