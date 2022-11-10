@@ -70,19 +70,6 @@ public struct ColorSlider: View {
                 HStack {
                     /// The knob.
                     ZStack {
-                        /// The knob center.
-//                        RoundedRectangle(cornerRadius: 50)
-//                            .foregroundColor(
-//                                .init(
-//                                    red: 1 - rgbColour.r,
-//                                    green: 1 - rgbColour.g,
-//                                    blue: 1 - rgbColour.b
-//                                )
-//                            )
-//                            .frame(
-//                                width: knobSize.width,
-//                                height: knobSize.height
-//                            )
                         /// The knob outline.
                         RoundedRectangle(cornerRadius: 50)
                             .strokeBorder(
@@ -91,11 +78,11 @@ public struct ColorSlider: View {
                                     green: 1 - rgbColour.g,
                                     blue: 1 - rgbColour.b
                                 ),
-                                lineWidth: self.isTouchingKnob ? 4 : 5
+                                lineWidth: 4
                             )
                             .frame(
-                                width: self.knobSize.width,
-                                height: self.knobSize.height
+                                width: knobSize.width,
+                                height: knobSize.height
                             )
                     }
                     /// Set the offset of the knob.
