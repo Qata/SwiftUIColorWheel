@@ -34,14 +34,14 @@ public struct ColorSlider: View {
     public init(
         rgb: Binding<RGB>,
         value: Binding<CGFloat>,
-        range: ClosedRange<CGFloat> = 0...1,
+        range: ClosedRange<CGFloat> = 0 ... 1,
         leadingOffset: CGFloat = 8,
         trailingOffset: CGFloat = 8,
         knobSize: CGSize = .init(width: 28, height: 28)
     ) {
         _rgbColour = rgb
         _value = value
-        self.range = range.clamped(to: 0.001...1)
+        self.range = range.clamped(to: 0.001 ... 1)
         self.leadingOffset = leadingOffset
         self.trailingOffset = trailingOffset
         self.knobSize = knobSize
@@ -99,9 +99,9 @@ public struct ColorSlider: View {
                             from: self.range,
                             to: self
                                 .leadingOffset ...
-                            (
-                                geometry.size.width - knobSize.width - trailingOffset
-                            )
+                                (
+                                    geometry.size.width - knobSize.width - trailingOffset
+                                )
                         )
                     )
                     /// The knob shadow.
@@ -158,7 +158,7 @@ public struct ColorSlider: View {
                                 self.isTouchingKnob = false
                             }
                     )
-                    .onChange(of: value) { newValue in
+                    .onChange(of: value) { _ in
                         var hsv = rgbColour.hsv
                         hsv.v = value
                         rgbColour = hsv.rgb

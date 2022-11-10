@@ -63,6 +63,20 @@ public extension RGB {
         self.init(r: red, g: green, b: blue)
     }
 
+    init(color: Color) {
+        self.init(uiColor: UIColor(color))
+    }
+
+    init(uiColor: UIColor) {
+        let rgb = uiColor
+            .cgColor
+            .components
+            .filter { $0.count == 4 }?
+            .dropLast()
+            ?? [0, 0, 0]
+        self.init(r: rgb[0], g: rgb[1], b: rgb[2])
+    }
+
     var color: Color {
         .init(red: r, green: g, blue: b, opacity: 1)
     }

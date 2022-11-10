@@ -33,3 +33,14 @@ extension CGFloat {
         return result
     }
 }
+
+extension Optional {
+    func filter(_ isIncluded: (Wrapped) throws -> Bool) rethrows -> Optional {
+        switch self {
+        case let value? where try isIncluded(value):
+            return value
+        default:
+            return nil
+        }
+    }
+}
