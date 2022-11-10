@@ -1,6 +1,6 @@
 //
-//  NewColourWheel.swift
-//  Colour Wheel
+//  NewColorWheel.swift
+//  Color Wheel
 //
 //  Created by Christian P on 11/6/20.
 //  Copyright © 2020 Christian P. All rights reserved.
@@ -9,20 +9,17 @@
 import SwiftUI
 
 /// The actual colour wheel view.
-struct NewColourWheel: View {
-    
+struct NewColorWheel: View {
     /// Draws at a specified radius.
     var radius: CGFloat
-    
+
     /// The RGB colour. Is a binding as it can change and the view will update when it does.
-    @Binding var rgbColour: RGB
-    
+    @Binding var rgbColor: RGB
+
     var body: some View {
-        
         /// Geometry reader so we can know more about the geometry around and within the view.
         GeometryReader { geometry in
             ZStack {
-                
                 /// The colour wheel. See the definition.
                 AngularGradientHueView(radius: self.radius)
                     /// Smoothing out of the colours.
@@ -42,38 +39,36 @@ struct NewColourWheel: View {
                     )
                     /// Outer shadow.
                     .shadow(color: Color("ShadowOuter"), radius: 15)
-                
+
                 /// This *is* required for the saturation scale of the wheel. It actually makes the gradient less "accurate" but looks nicer. It's basically just a white radial gradient that blends the colours together nicer.
-                RadialGradient(gradient: Gradient(colors: [.white, .black]), center: .center, startRadius: 0, endRadius: self.radius/2 - 10)
+                RadialGradient(gradient: Gradient(colors: [.white, .black]), center: .center, startRadius: 0, endRadius: self.radius / 2 - 10)
                     .blendMode(.screen)
 
                 /// The little knob that shows selected colour.
                 Circle()
                     .frame(width: 10, height: 10)
-                    .offset(x: (self.radius/2 - 10) * self.rgbColour.hsv.s)
-                    .rotationEffect(.degrees(-Double(self.rgbColour.hsv.h)))
-                
+                    .offset(x: (self.radius / 2 - 10) * self.rgbColor.hsv.s)
+                    .rotationEffect(.degrees(-Double(self.rgbColor.hsv.h)))
             }
             /// The gesture so we can detect taps and drags on the wheel.
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .global)
                     .onChanged { value in
-                        
                         /// Work out angle which will be the hue.
                         let y = geometry.frame(in: .global).midY - value.location.y
                         let x = value.location.x - geometry.frame(in: .global).midX
-                        
+
                         /// Use `atan2` to get the angle from the center point then convert than into a 360 value with custom function(find it in helpers).
                         let hue = atan2To360(atan2(y, x))
-                        
+
                         /// Work out distance from the center point which will be the saturation.
                         let center = CGPoint(x: geometry.frame(in: .global).midX, y: geometry.frame(in: .global).midY)
-                        
+
                         /// Maximum value of sat is 1 so we find the smallest of 1 and the distance.
-                        let saturation = min(distance(center, value.location)/(self.radius/2), 1)
-                        
+                        let saturation = min(distance(center, value.location) / (self.radius / 2), 1)
+
                         /// Convert HSV to RGB and set the colour which will notify the views.
-                        self.rgbColour = HSV(h: hue, s: saturation, v: 1).rgb
+                        self.rgbColor = HSV(h: hue, s: saturation, v: 1).rgb
                     }
             )
         }
@@ -82,8 +77,8 @@ struct NewColourWheel: View {
     }
 }
 
-struct NewColourWheel_Previews: PreviewProvider {
+struct NewColorWheel_Previews: PreviewProvider {
     static var previews: some View {
-        NewColourWheel(radius: 350, rgbColour: .constant(RGB(r: 1, g: 1, b: 1)))
+        NewColorWheel(radius: 350, rgbColor: .constant(RGB(r: 1, g: 1, b: 1)))
     }
 }

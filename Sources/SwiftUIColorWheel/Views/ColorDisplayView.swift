@@ -8,15 +8,19 @@
 
 import SwiftUI
 
-struct ColourShowView: View {
-    
-    @Binding var rgbColour: RGB
-    
+struct ColorDisplayView: View {
+    @Binding var rgbColor: RGB
+
     var body: some View {
         /// The view that shows the selected colour.
         RoundedRectangle(cornerRadius: 10)
-            .foregroundColor(Color.init(red: Double(rgbColour.r), green: Double(rgbColour.g), blue: Double(rgbColour.b)))
-            .frame(width: 300, height: 50)
+            .foregroundColor(
+                Color(
+                    red: Double(rgbColor.r),
+                    green: Double(rgbColor.g),
+                    blue: Double(rgbColor.b)
+                )
+            )
             /// The outline.
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
@@ -29,6 +33,6 @@ struct ColourShowView: View {
 
 struct ColourShowView_Previews: PreviewProvider {
     static var previews: some View {
-        ColourShowView(rgbColour: .constant(RGB(r: 1, g: 1, b: 1)))
+        ColorDisplayView(rgbColor: .constant(RGB(r: 1, g: 1, b: 1)))
     }
 }
