@@ -53,11 +53,13 @@ public struct ColorSlider: View {
                 /// The slider track.
                 RoundedRectangle(cornerRadius: 30)
                     /// Set the colour to be the selected colour.
-                    .foregroundColor(Color(
-                        red: Double(self.rgbColour.r),
-                        green: Double(self.rgbColour.g),
-                        blue: Double(self.rgbColour.b)
-                    ))
+                    .foregroundColor(
+                        Color(
+                            red: Double(self.rgbColour.r),
+                            green: Double(self.rgbColour.g),
+                            blue: Double(self.rgbColour.b)
+                        )
+                    )
                     /// The outline.
                     .overlay(
                         RoundedRectangle(cornerRadius: 30)
@@ -68,45 +70,38 @@ public struct ColorSlider: View {
                 HStack {
                     /// The knob.
                     ZStack {
-                        /// The knob outline.
-                        RoundedRectangle(cornerRadius: 50)
-                            .stroke(
-                                Color("Outline"),
-                                lineWidth: self.isTouchingKnob ? 4 : 5
-                            )
-                            .frame(
-                                width: self.knobSize.width,
-                                height: self.knobSize.height
-                            )
                         /// The knob center.
                         RoundedRectangle(cornerRadius: 50)
-                            .foregroundColor(Color(
-                                red: Double(self.rgbColour.r - 0.1),
-                                green: Double(self.rgbColour.g - 0.1),
-                                blue: Double(self.rgbColour.b - 0.1)
-                            ))
+                            .strokeBorder(Color("Outline"), lineWidth: 1)
+                            .foregroundColor(
+                                .init(
+                                    red: 255 - rgbColour.r,
+                                    green: 255 - rgbColour.g,
+                                    blue: 255 - rgbColour.b
+                                )
+                            )
                             .frame(
-                                width: self.knobSize.width,
-                                height: self.knobSize.height
+                                width: knobSize.width,
+                                height: knobSize.height
                             )
                     }
                     /// Set the offset of the knob.
-                    .offset(x: self.$value.wrappedValue.map(
-                        from: self.range,
-                        to: self
-                            .leadingOffset ...
+                    .offset(
+                        x: self.$value.wrappedValue.map(
+                            from: self.range,
+                            to: self
+                                .leadingOffset ...
                             (
-                                geometry.size.width - self.knobSize.width - self
-                                    .trailingOffset
+                                geometry.size.width - knobSize.width - trailingOffset
                             )
-                    ))
+                        )
+                    )
                     /// The knob shadow.
                     .shadow(color: Color("ShadowOuter"), radius: 18)
                     /// Gesture to detect drag.
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
-
                                 /// Tell view we are now touching the knob and
                                 /// record the position before we move it.
                                 self.isTouchingKnob = true
@@ -155,6 +150,11 @@ public struct ColorSlider: View {
                                 self.isTouchingKnob = false
                             }
                     )
+                    .onChange(of: value) { newValue in
+                        var hsv = rgbColour.hsv
+                        hsv.v = value
+                        rgbColour = hsv.rgb
+                    }
                     /// Spacer in HStack aligns the knob to the left so that we
                     /// don't have to deal with abs().
                     Spacer()
