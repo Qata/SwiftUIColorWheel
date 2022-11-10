@@ -85,11 +85,13 @@ public struct ColorWheel: View {
                 )
                 .blendMode(.screen)
 
+                let knobSize = max(10, radius / 15)
+
                 /// The little knob that shows selected colour.
                 Circle()
                     .strokeBorder(.black, lineWidth: 1)
-                    .frame(width: 10, height: 10)
-                    .offset(x: (radius / 2 - 10) * rgbColor.hsv.s)
+                    .frame(width: knobSize, height: knobSize)
+                    .offset(x: (radius / 2 - knobSize) * rgbColor.hsv.s)
                     .rotationEffect(.degrees(-Double(rgbColor.hsv.h)))
             }
             /// The gesture so we can detect touches on the wheel.
