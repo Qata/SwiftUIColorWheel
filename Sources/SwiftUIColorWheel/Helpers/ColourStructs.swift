@@ -13,7 +13,7 @@ import SwiftUI
 
 /// Struct that holds red, green and blue values. Also has a `hsv` value that
 /// converts it's values to hsv.
-public struct RGB {
+public struct RGB: Hashable, Codable {
     var r: CGFloat // Percent [0,1]
     var g: CGFloat // Percent [0,1]
     var b: CGFloat // Percent [0,1]
