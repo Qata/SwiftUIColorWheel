@@ -30,8 +30,7 @@ public struct ColorSlider: View {
 
     /// Set the knob size.
     var knobSize: CGSize
-    
-    
+
     public init(
         rgb: Binding<RGB>,
         value: Binding<CGFloat>,
@@ -40,8 +39,8 @@ public struct ColorSlider: View {
         trailingOffset: CGFloat = 8,
         knobSize: CGSize = .init(width: 28, height: 28)
     ) {
-        self._rgbColour = rgb
-        self._value = value
+        _rgbColour = rgb
+        _value = value
         self.range = range
         self.leadingOffset = leadingOffset
         self.trailingOffset = trailingOffset

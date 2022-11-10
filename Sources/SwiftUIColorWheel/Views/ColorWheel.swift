@@ -28,7 +28,10 @@ public struct ColorWheel: View {
         self.radius = radius
         _rgbColor = rgb
         _brightness = brightness
+        updateColor()
+    }
 
+    func updateColor() {
         DispatchQueue.main.async {
             rgbColor = HSV(
                 h: rgbColor.hsv.h,
@@ -70,11 +73,10 @@ public struct ColorWheel: View {
                 RadialGradient(
                     gradient: Gradient(
                         colors: [
-                            Color.white
-                                .opacity(
-                                    0.8 * Double(brightness)
-                                ),
-                            .clear
+                            Color.white.opacity(
+                                0.8 * Double(brightness)
+                            ),
+                            .clear,
                         ]
                     ),
                     center: .center,
@@ -85,43 +87,47 @@ public struct ColorWheel: View {
 
                 /// The little knob that shows selected colour.
                 Circle()
+                    .strokeBorder(.black, lineWidth: 1)
                     .frame(width: 10, height: 10)
                     .offset(x: (radius / 2 - 10) * rgbColor.hsv.s)
                     .rotationEffect(.degrees(-Double(rgbColor.hsv.h)))
             }
             /// The gesture so we can detect touches on the wheel.
             .gesture(
-                DragGesture(minimumDistance: 0, coordinateSpace: .global)
-                    .onChanged { value in
-                        /// Work out angle which will be the hue.
-                        let y = geometry.frame(in: .global).midY - value.location.y
-                        let x = value.location.x - geometry.frame(in: .global).midX
+                DragGesture(
+                    minimumDistance: 0,
+                    coordinateSpace: .global
+                )
+                .onChanged { value in
+                    /// Work out angle which will be the hue.
+                    let y = geometry.frame(in: .global).midY - value.location.y
+                    let x = value.location.x - geometry.frame(in: .global).midX
 
-                        /// Use `atan2` to get the angle from the center point
-                        /// then convert than into a 360 value with custom
-                        /// function(find it in helpers).
-                        let hue = atan2To360(atan2(y, x))
+                    /// Use `atan2` to get the angle from the center point
+                    /// then convert than into a 360 value with custom
+                    /// function(find it in helpers).
+                    let hue = atan2To360(atan2(y, x))
 
-                        /// Work out distance from the center point which will
-                        /// be the saturation.
-                        let center = CGPoint(
-                            x: geometry.frame(in: .global).midX,
-                            y: geometry.frame(in: .global).midY
-                        )
+                    /// Work out distance from the center point which will
+                    /// be the saturation.
+                    let center = CGPoint(
+                        x: geometry.frame(in: .global).midX,
+                        y: geometry.frame(in: .global).midY
+                    )
 
-                        /// Maximum value of sat is 1 so we find the smallest of
-                        /// 1 and the distance.
-                        let saturation = min(
-                            distance(center, value.location) / (radius / 2),
-                            1
-                        )
+                    /// Maximum value of sat is 1 so we find the smallest of
+                    /// 1 and the distance.
+                    let saturation = min(
+                        distance(center, value.location) / (radius / 2),
+                        1
+                    )
 
-                        rgbColor = HSV(
-                            h: hue,
-                            s: saturation,
-                            v: brightness
-                        ).rgb
-                    }
+                    rgbColor = HSV(
+                        h: hue,
+                        s: saturation,
+                        v: brightness
+                    ).rgb
+                }
             )
         }
         .frame(width: radius, height: radius)

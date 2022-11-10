@@ -35,7 +35,7 @@
 --typeblanklines remove
 --wraparguments before-first
 --wrapparameters before-first
---wrapcollections after-first
+--wrapcollections before-first
 
 # rules
 

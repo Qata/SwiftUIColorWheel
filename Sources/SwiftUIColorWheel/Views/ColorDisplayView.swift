@@ -10,9 +10,9 @@ import SwiftUI
 
 public struct ColorDisplayView: View {
     @Binding var rgbColor: RGB
-    
+
     public init(rgb: Binding<RGB>) {
-        self._rgbColor = rgb
+        _rgbColor = rgb
     }
 
     public var body: some View {

@@ -37,11 +37,13 @@ struct CIHueSaturationValueGradientView: UIViewRepresentable {
     func renderFilter() -> UIImage {
         let filter = CIFilter(
             name: "CIHueSaturationValueGradient",
-            parameters: ["inputColorSpace": CGColorSpaceCreateDeviceRGB(),
-                         "inputDither": 0,
-                         "inputRadius": radius * 0.4,
-                         "inputSoftness": 0,
-                         "inputValue": brightness]
+            parameters: [
+                "inputColorSpace": CGColorSpaceCreateDeviceRGB(),
+                "inputDither": 0,
+                "inputRadius": radius * 0.4,
+                "inputSoftness": 0,
+                "inputValue": brightness,
+            ]
         )!
 
         /// Output as UIImageView
