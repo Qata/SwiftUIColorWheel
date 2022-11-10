@@ -54,7 +54,7 @@ public struct ColorSlider: View {
                 RoundedRectangle(cornerRadius: 30)
                     /// Set the colour to be the selected colour.
                     .foregroundColor(
-                        Color(
+                        .init(
                             red: Double(self.rgbColour.r),
                             green: Double(self.rgbColour.g),
                             blue: Double(self.rgbColour.b)
@@ -70,14 +70,23 @@ public struct ColorSlider: View {
                 HStack {
                     /// The knob.
                     ZStack {
+                        /// The knob outline.
+                        RoundedRectangle(cornerRadius: 50)
+                            .stroke(
+                                Color("Outline"),
+                                lineWidth: self.isTouchingKnob ? 4 : 5
+                            )
+                            .frame(
+                                width: self.knobSize.width,
+                                height: self.knobSize.height
+                            )
                         /// The knob center.
                         RoundedRectangle(cornerRadius: 50)
-                            .strokeBorder(Color("Outline"), lineWidth: 1)
                             .foregroundColor(
                                 .init(
-                                    red: 255 - rgbColour.r,
-                                    green: 255 - rgbColour.g,
-                                    blue: 255 - rgbColour.b
+                                    red: 1 - rgbColour.r,
+                                    green: 1 - rgbColour.g,
+                                    blue: 1 - rgbColour.b
                                 )
                             )
                             .frame(
